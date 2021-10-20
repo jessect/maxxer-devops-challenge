@@ -16,3 +16,21 @@ module "vpc" {
   enable_nat_gateway = true
   enable_vpn_gateway = true
  }
+
+ # eks module
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "17.22.0"
+
+  cluster_version = "1.21"
+  cluster_name    = "${var.project}-${var.env}"
+  vpc_id          = module.vpc.vpc_id
+  subnets         = [ "${element(module.vpc.private_subnets, 0)}", "${element(module.vpc.private_subnets, 1)}" ]
+
+  worker_groups = [
+    {
+      instance_type = "t2.small"
+      asg_max_size  = 2
+    }
+  ]
+}
