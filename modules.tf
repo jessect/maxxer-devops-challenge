@@ -76,7 +76,7 @@ module "rds" {
 
   name     = var.project
   username = "admin"
-  password = random_password.mysql_master_password.result
+  password = random_password.master_password.result
   port     = 3306
 
   multi_az               = true
