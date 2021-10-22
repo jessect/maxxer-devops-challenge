@@ -24,3 +24,12 @@ resource "aws_secretsmanager_secret_version" "rds_credentials" {
 }
 EOF
 }
+
+# ecr repository
+resource "aws_ecr_repository" "ecr" {
+  name = "${var.project}-${var.repo_name}-${var.env}"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
