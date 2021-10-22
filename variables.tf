@@ -18,8 +18,13 @@ variable "env" {
   default     = "dev"
 }
 
+variable "app_user" {
+  description = "User account for database"
+  default     = "appuser"
+}
+
 variable "repo_name" {
-  description = "Name of the codecommit repository."
+  description = "Name of the codecommit repository"
   default     = "myapp"
 }
 
