@@ -10,6 +10,13 @@ resource "random_password" "app_password" {
   special = false
 }
 
+# grafana password
+resource "random_password" "grafana_password" {
+  length  = 16
+  special = false
+}
+
+
 # sg module - database
 module "sg_db" {
   source  = "terraform-aws-modules/security-group/aws"
@@ -88,6 +95,11 @@ resource "random_id" "app" {
   byte_length = 4
 }
 
+resource "random_id" "grafana" {
+  byte_length = 4
+}
+
+
 # store rds credentials
 resource "aws_secretsmanager_secret" "rds_credentials" {
   name = "${var.project}-${var.env}-rds-credentials-${random_id.rds.id}"
@@ -123,18 +135,57 @@ resource "aws_secretsmanager_secret_version" "app_credentials" {
 EOF
 }
 
-# create db user
-resource "null_resource" "db_user" {
+# store grafana credentials
+resource "aws_secretsmanager_secret" "grafana_credentials" {
+  name = "${var.project}-${var.env}-grafana-credentials-${random_id.grafana.id}"
+}
+
+resource "aws_secretsmanager_secret_version" "grafana_credentials" {
+  secret_id     = aws_secretsmanager_secret.app_credentials.id
+  secret_string = <<EOF
+{
+  "username": "grafana",
+  "password": "${random_password.grafana_password.result}",
+}
+EOF
+}
+
+# create db user myapp
+resource "null_resource" "myapp_db_user" {
   provisioner "local-exec" {
     command = <<EOT
-    kubectl run db-init --image=mysql:8 -it --rm --restart=Never -- mysql \
+    kubectl run myapp-db-init --image=mysql:8 -it --rm --restart=Never -- mysql \
     --host=${module.rds.db_instance_address} \
     --port=${module.rds.db_instance_port} \
     --user=${module.rds.db_instance_username} \
     --password=${random_password.master_password.result} -e "\
     CREATE USER '${var.app_user}'@'%' IDENTIFIED BY '${random_password.app_password.result}'; \
-    GRANT ALL PRIVILEGES ON ${var.project} . * TO '${var.app_user}'@'%';"
+    GRANT ALL PRIVILEGES ON ${var.project}.* TO '${var.app_user}'@'%';"
     EOT
   }
   depends_on = [module.rds.endpoint]
+}
+
+# create db user grafana
+resource "null_resource" "grafana_db_user" {
+  provisioner "local-exec" {
+    command = <<EOT
+    kubectl run grafana-db-init --image=mysql:8 -it --rm --restart=Never -- mysql \
+    --host=${module.rds.db_instance_address} \
+    --port=${module.rds.db_instance_port} \
+    --user=${module.rds.db_instance_username} \
+    --password=${random_password.master_password.result} -e "\
+    CREATE DATABASE grafana; \
+    CREATE USER 'grafana'@'%' IDENTIFIED BY '${random_password.grafana_password.result}'; \
+    GRANT ALL PRIVILEGES ON grafana.* TO 'grafana'@'%';"
+    EOT
+  }
+  depends_on = [module.rds.endpoint]
+}
+
+resource "null_resource" "grafana_db_import" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f grafana/mysql.yml && kubectl cp grafana/grafana.sql mysql:/tmp && kubectl cp grafana/db-import.sh mysql:/tmp && kubectl exec mysql -- /tmp/db-import.sh ${module.rds.db_instance_address} ${module.rds.db_instance_username} ${random_password.master_password.result} && kubectl delete -f grafana/mysql.yml"
+  }
+  depends_on = [null_resource.grafana_db_user]
 }
