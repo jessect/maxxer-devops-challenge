@@ -146,23 +146,8 @@ resource "aws_codebuild_project" "deploy_project" {
     privileged_mode = true
 
     environment_variable {
-      name  = "DB_HOST"
-      value = module.rds.db_instance_address
-    }
-
-    environment_variable {
-      name  = "DB_NAME"
-      value = var.project
-    }
-
-    environment_variable {
-      name  = "DB_USER"
-      value = var.app_user
-    }
-
-    environment_variable {
-      name  = "DB_PASS"
-      value = random_password.app_password.result
+      name  = "SECRET_ARN"
+      value = aws_secretsmanager_secret.app_credentials.arn
     }
 
     environment_variable {
@@ -263,6 +248,7 @@ resource "aws_codepipeline" "pipeline" {
       }
     }
   }
+  depends_on = [module.eks.cluster_id]
 }
 
 # push the source dir to codecommit repository

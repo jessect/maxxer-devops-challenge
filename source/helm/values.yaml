@@ -2,12 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-configmap:
-  db_host: ""
-  db_name: ""
-  db_user: ""
-  db_pass: ""
-
+configmap: {}
 
 replicaCount: 3
 

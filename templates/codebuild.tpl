@@ -38,6 +38,7 @@
     {
       "Action": [
         "ecr:*",
+        "secretsmanager:GetSecretValue",
         "eks:*"
       ],
       "Resource": "*",

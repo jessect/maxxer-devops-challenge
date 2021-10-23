@@ -30,19 +30,15 @@ phases:
             helm upgrade myapp ./helm -n $K8S_NAMESPACE \
               --set image.repository="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME" \
               --set image.tag="$IMAGE_TAG" \
-              --set configmap.db_host="$DB_HOST" \
-              --set configmap.db_name="$DB_NAME" \
-              --set configmap.db_user="$DB_USER" \
-              --set configmap.db_pass="$DB_PASS"
+              --set configmap.secret_arn="$SECRET_ARN" \
+              --set configmap.aws_region="$AWS_REGION"
           else
             echo "myapp release not found. Installing..."
             helm install myapp ./helm -n $K8S_NAMESPACE \
               --set image.repository="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME" \
               --set image.tag="$IMAGE_TAG" \
-              --set configmap.db_host="$DB_HOST" \
-              --set configmap.db_name="$DB_NAME" \
-              --set configmap.db_user="$DB_USER" \
-              --set configmap.db_pass="$DB_PASS"
+              --set configmap.secret_arn="$SECRET_ARN" \
+              --set configmap.aws_region="$AWS_REGION"
           fi  
   post_build:
     commands:

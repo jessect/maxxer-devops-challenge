@@ -6,11 +6,7 @@ metadata:
   labels:
     {{- include "myapp.labels" . | nindent 4 }}
 data:
-  DB_HOST:
-    {{- .Values.configmap.db_host | nindent 4 }}
-  DB_NAME:
-    {{- .Values.configmap.db_name | nindent 4 }}
-  DB_USER:
-    {{- .Values.configmap.db_user | nindent 4 }}        
-  DB_PASS:
-    {{- .Values.configmap.db_pass | nindent 4 }}    
+  SECRET_ARN:
+    {{- .Values.configmap.secret_arn | nindent 4 }}
+  AWS_REGION:
+    {{- .Values.configmap.aws_region | nindent 4 }}

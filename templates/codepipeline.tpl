@@ -59,6 +59,7 @@
         "rds:*",
         "sqs:*",
         "ecs:*",
+        "secretsmanager:GetSecretValue",
         "iam:PassRole"
       ],
       "Resource": "*",

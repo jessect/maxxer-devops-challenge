@@ -35,7 +35,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
           - configMapRef:
-              name: {{ include "myapp.fullname" . }}            
+              name: {{ include "myapp.fullname" . }}
+          - secretRef:
+              name: {{ include "myapp.fullname" . }}              
           ports:
             - name: http
               containerPort: 8090
