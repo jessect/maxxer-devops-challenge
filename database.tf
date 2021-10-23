@@ -110,7 +110,7 @@ EOF
 
 # store app credentials
 resource "aws_secretsmanager_secret" "app_credentials" {
-  name = "${var.project}-${var.repo_name}-${var.env}-credentials-${random_id.rds.id}"
+  name = "${var.project}-${var.env}-${var.repo_name}-credentials-${random_id.rds.id}"
 }
 
 resource "aws_secretsmanager_secret_version" "app_credentials" {
