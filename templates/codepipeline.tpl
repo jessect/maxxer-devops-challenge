@@ -53,6 +53,7 @@
         "cloudwatch:*",
         "s3:*",
         "ecr:*",
+        "eks:*",
         "sns:*",
         "cloudformation:*",
         "rds:*",

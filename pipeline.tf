@@ -146,6 +146,36 @@ resource "aws_codebuild_project" "deploy_project" {
     privileged_mode = true
 
     environment_variable {
+      name  = "DB_HOST"
+      value = module.rds.db_instance_address
+    }
+
+    environment_variable {
+      name  = "DB_NAME"
+      value = var.project
+    }
+
+    environment_variable {
+      name  = "DB_USER"
+      value = var.app_user
+    }
+
+    environment_variable {
+      name  = "DB_PASS"
+      value = random_password.app_password.result
+    }
+
+    environment_variable {
+      name  = "K8S_CLUSTER_NAME"
+      value = "${var.project}-${var.env}"
+    }
+
+    environment_variable {
+      name  = "K8S_NAMESPACE"
+      value = var.project
+    }
+
+    environment_variable {
       name  = "IMAGE_REPO_NAME"
       value = "${var.project}-${var.repo_name}-${var.env}"
     }
@@ -204,13 +234,12 @@ resource "aws_codepipeline" "pipeline" {
     name = "Publish"
 
     action {
-      name             = "Publish"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
-      version          = "1"
+      name            = "Publish"
+      category        = "Build"
+      owner           = "AWS"
+      provider        = "CodeBuild"
+      input_artifacts = ["source_output"]
+      version         = "1"
 
       configuration = {
         ProjectName = aws_codebuild_project.publish_project.name
@@ -226,7 +255,7 @@ resource "aws_codepipeline" "pipeline" {
       category        = "Build"
       owner           = "AWS"
       provider        = "CodeBuild"
-      input_artifacts = ["build_output"]
+      input_artifacts = ["source_output"]
       version         = "1"
 
       configuration = {
@@ -236,7 +265,7 @@ resource "aws_codepipeline" "pipeline" {
   }
 }
 
-# push the source code to codecommit repository
+# push the source dir to codecommit repository
 resource "null_resource" "codecommit_push" {
   provisioner "local-exec" {
     command     = <<EOT

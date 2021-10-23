@@ -37,7 +37,8 @@
     },
     {
       "Action": [
-        "ecr:*"
+        "ecr:*",
+        "eks:*"
       ],
       "Resource": "*",
       "Effect": "Allow"
