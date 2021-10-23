@@ -30,8 +30,9 @@ module "eks" {
 
   worker_groups = [
     {
-      instance_type = "t3.small"
-      asg_max_size  = 2
+      instance_type = "t3.large"
+      asg_min_size  = 2
+      asg_max_size  = 5
     }
   ]
   map_roles = [
@@ -42,6 +43,13 @@ module "eks" {
     },
   ]
 
+}
+
+resource "null_resource" "kubeconfig" {
+  provisioner "local-exec" {
+    command = "aws eks --region ${var.region} update-kubeconfig --name ${var.project}-${var.env} --profile ${var.profile}"
+  }
+  depends_on = [module.eks.kubeconfig]
 }
 
 resource "kubernetes_namespace" "ns_project" {
