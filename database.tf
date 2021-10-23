@@ -129,6 +129,8 @@ resource "aws_secretsmanager_secret_version" "app_credentials" {
   secret_id     = aws_secretsmanager_secret.app_credentials.id
   secret_string = <<EOF
 {
+  "host": "${module.rds.db_instance_address}",
+  "dbname": "${module.rds.db_instance_name}",  
   "username": "${var.app_user}",
   "password": "${random_password.app_password.result}",
 }
@@ -141,9 +143,11 @@ resource "aws_secretsmanager_secret" "grafana_credentials" {
 }
 
 resource "aws_secretsmanager_secret_version" "grafana_credentials" {
-  secret_id     = aws_secretsmanager_secret.app_credentials.id
+  secret_id     = aws_secretsmanager_secret.grafana_credentials.id
   secret_string = <<EOF
 {
+  "host": "${module.rds.db_instance_address}",
+  "dbname": "grafana",  
   "username": "grafana",
   "password": "${random_password.grafana_password.result}",
 }
