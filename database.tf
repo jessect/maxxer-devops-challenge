@@ -132,7 +132,7 @@ resource "aws_secretsmanager_secret_version" "app_credentials" {
   "host": "${module.rds.db_instance_address}",
   "dbname": "${module.rds.db_instance_name}",  
   "username": "${var.app_user}",
-  "password": "${random_password.app_password.result}",
+  "password": "${random_password.app_password.result}"
 }
 EOF
 }
@@ -167,7 +167,7 @@ resource "null_resource" "myapp_db_user" {
     GRANT ALL PRIVILEGES ON ${var.project}.* TO '${var.app_user}'@'%';"
     EOT
   }
-  depends_on = [module.rds.endpoint]
+  depends_on = [module.rds.db_instance_id]
 }
 
 # create db user grafana
@@ -184,7 +184,7 @@ resource "null_resource" "grafana_db_user" {
     GRANT ALL PRIVILEGES ON grafana.* TO 'grafana'@'%';"
     EOT
   }
-  depends_on = [module.rds.endpoint]
+  depends_on = [module.rds.db_instance_id]
 }
 
 resource "null_resource" "grafana_db_import" {

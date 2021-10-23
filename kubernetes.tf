@@ -31,7 +31,7 @@ module "eks" {
   worker_groups = [
     {
       instance_type = "t3.large"
-      asg_min_size  = 2
+      asg_min_size  = 1
       asg_max_size  = 5
     }
   ]
@@ -49,7 +49,7 @@ resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
     command = "aws eks --region ${var.region} update-kubeconfig --name ${var.project}-${var.env} --profile ${var.profile}"
   }
-  depends_on = [module.eks.kubeconfig]
+  depends_on = [module.eks.cluster_id]
 }
 
 resource "kubernetes_namespace" "ns_project" {
@@ -60,4 +60,18 @@ resource "kubernetes_namespace" "ns_project" {
 
     name = var.project
   }
+}
+
+resource "kubernetes_secret" "myapp_secret" {
+  metadata {
+    name      = "myapp"
+    namespace = var.project
+  }
+  type = "Opaque"
+  data = {
+    AWS_ACCESS_KEY_ID     = aws_iam_access_key.myapp_key.id
+    AWS_SECRET_ACCESS_KEY = aws_iam_access_key.myapp_key.secret
+  }
+
+  depends_on = [module.eks.cluster_id]
 }

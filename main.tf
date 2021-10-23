@@ -27,3 +27,36 @@ resource "aws_ecr_repository" "ecr" {
     scan_on_push = true
   }
 }
+
+
+resource "aws_iam_user" "myapp" {
+  name = "myapp-iam"
+}
+
+resource "aws_iam_access_key" "myapp_key" {
+  user = aws_iam_user.myapp.name
+}
+
+resource "aws_iam_user_policy" "myapp_policy" {
+  name = "myapp-iam"
+  user = aws_iam_user.myapp.name
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "myapp",
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:ListSecretVersionIds"
+            ],
+            "Resource": "${aws_secretsmanager_secret.app_credentials.arn}"
+        }
+    ]
+}
+EOF
+}
