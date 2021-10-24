@@ -24,31 +24,31 @@ variable "app_user" {
 }
 
 variable "repo_name" {
-  description = "Name of the codecommit repository"
+  description = "Cdecommit repository"
   default     = "myapp"
 }
 
 variable "repo_default_branch" {
-  description = "The name of the default repository branch"
+  description = "Default repository branch"
   default     = "develop"
 }
 
 variable "force_artifact_destroy" {
-  description = "Force the removal of the artifact S3 bucket on destroy"
+  description = "Force S3 bucket on destroy"
   default     = "true"
 }
 
 variable "build_timeout" {
-  description = "The time to wait for a CodeBuild to complete before timing out in minutes"
+  description = "CodeBuild timeout (minutes)"
   default     = "5"
 }
 
 variable "build_compute_type" {
-  description = "The build instance type for CodeBuild"
+  description = "Instance type for CodeBuild"
   default     = "BUILD_GENERAL1_SMALL"
 }
 
 variable "build_image" {
-  description = "The build image for CodeBuild to use"
+  description = "Image for CodeBuild to use"
   default     = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
 }
