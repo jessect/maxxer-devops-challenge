@@ -4,6 +4,7 @@ provider "helm" {
   }
 }
 
+# install monitoring tools
 resource "helm_release" "loki_stack" {
   name             = "loki"
   namespace        = "monitoring"
@@ -46,6 +47,11 @@ resource "helm_release" "loki_stack" {
     value = random_password.grafana_password.result
   }
 
+  set {
+    name  = "grafana.service.type"
+    value = "LoadBalancer"
+  }
 
   depends_on = [null_resource.grafana_db_import]
+
 }

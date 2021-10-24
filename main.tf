@@ -19,7 +19,7 @@ module "vpc" {
   enable_vpn_gateway = true
 }
 
-# ecr repository
+# create ecr repository
 resource "aws_ecr_repository" "ecr" {
   name = "${var.project}-${var.repo_name}-${var.env}"
 
@@ -28,7 +28,7 @@ resource "aws_ecr_repository" "ecr" {
   }
 }
 
-
+# create iam user for myapp get credentials from secretsmanager
 resource "aws_iam_user" "myapp" {
   name = "myapp-iam"
 }

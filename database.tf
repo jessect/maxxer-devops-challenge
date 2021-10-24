@@ -17,8 +17,8 @@ resource "random_password" "grafana_password" {
 }
 
 
-# sg module - database
-module "sg_db" {
+# sg module
+module "sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.4.0"
 
@@ -63,7 +63,7 @@ module "rds" {
 
   multi_az               = true
   subnet_ids             = module.vpc.private_subnets
-  vpc_security_group_ids = [module.sg_db.security_group_id]
+  vpc_security_group_ids = [module.sg.security_group_id]
 
   maintenance_window              = "Mon:00:00-Mon:03:00"
   backup_window                   = "03:00-06:00"
@@ -84,7 +84,6 @@ module "rds" {
     }
   ]
 }
-
 
 # unique id for credentials
 resource "random_id" "rds" {
@@ -187,6 +186,7 @@ resource "null_resource" "grafana_db_user" {
   depends_on = [module.rds.db_instance_id]
 }
 
+# import dump file (database restore with some grafana dashboards)
 resource "null_resource" "grafana_db_import" {
   provisioner "local-exec" {
     command = "kubectl apply -f grafana/mysql.yml && kubectl cp grafana/grafana.sql mysql:/tmp && kubectl cp grafana/db-import.sh mysql:/tmp && kubectl exec mysql -- /tmp/db-import.sh ${module.rds.db_instance_address} ${module.rds.db_instance_username} ${random_password.master_password.result} && kubectl delete -f grafana/mysql.yml"

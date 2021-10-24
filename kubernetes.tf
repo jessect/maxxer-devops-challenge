@@ -45,6 +45,7 @@ module "eks" {
 
 }
 
+# generate kubeconfig
 resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
     command = "aws eks --region ${var.region} update-kubeconfig --name ${var.project}-${var.env} --profile ${var.profile}"
@@ -52,6 +53,7 @@ resource "null_resource" "kubeconfig" {
   depends_on = [module.eks.cluster_id]
 }
 
+# create namespace
 resource "kubernetes_namespace" "ns_project" {
   metadata {
     annotations = {
@@ -62,6 +64,7 @@ resource "kubernetes_namespace" "ns_project" {
   }
 }
 
+# create k8s secret with aws credentials
 resource "kubernetes_secret" "myapp_secret" {
   metadata {
     name      = "myapp"
