@@ -61,10 +61,8 @@ type Config struct {
 func main() {
 	var c Config
 	c = getSecret()
-
 	initDB(c)
 	log.Println("Starting the HTTP server on port 8090")
-
 	router := mux.NewRouter().StrictSlash(true)
 	router.Path("/metrics").Handler(promhttp.Handler())
 	initaliseHandlers(router)
@@ -96,7 +94,6 @@ func initaliseHandlers(router *mux.Router) {
 }
 
 func initDB(c Config) {
-
 	config :=
 		database.Config{
 			ServerName: c.Host,
