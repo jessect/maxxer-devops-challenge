@@ -1,27 +1,15 @@
 #!/bin/bash
+cd ../
 DB_USER=$(terraform output -raw 'database_admin_user')
 DB_PASS=$(terraform output -raw 'database_master_password')
 DB_HOST=$(terraform output -raw 'database_host')
 DB_NAME=$(terraform output -raw 'database_name')
 
-clear
-
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Pod
-metadata:
-  name: mysql
-spec:
-  containers:
-  - name: mysql
-    image: mysql:8 
-    args:
-    - sleep
-    - "1000000"
-EOF
+kubectl apply -f tools/mysql-client.yaml > /dev/null
 
 countPeople(){
-kubectl exec mysql -- bash -c "mysql \
+    echo -e "\nselect count(*) from $DB_NAME.people \n"
+    kubectl exec mysql-client -- bash -c "mysql \
     --host=$DB_HOST \
     --port=3306 \
     --user=$DB_USER \
@@ -30,17 +18,15 @@ kubectl exec mysql -- bash -c "mysql \
 }
 
 showPeople(){
-kubectl exec mysql -- bash -c "mysql \
+    echo -e "select * from $DB_NAME.people\n"
+    kubectl exec mysql-client -- bash -c "mysql \
     --host=$DB_HOST \
     --port=3306 \
     --user=$DB_USER \
     --password=$DB_PASS \
-    -e 'select * from jaylabs.people ORDER by id DESC;'"
+    -e 'select * from jaylabs.people;'"
 }
 
-echo -e "\n"
 countPeople 2> /dev/null
-
 echo -e "\n"
 showPeople 2> /dev/null
-echo -e "\n"
