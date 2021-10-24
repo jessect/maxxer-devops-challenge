@@ -59,9 +59,9 @@ resource "kubernetes_namespace" "ns_project" {
     annotations = {
       name = var.project
     }
-
     name = var.project
   }
+  depends_on = [module.eks.cluster_id]
 }
 
 # create k8s secret with aws credentials
@@ -75,6 +75,5 @@ resource "kubernetes_secret" "myapp_secret" {
     AWS_ACCESS_KEY_ID     = aws_iam_access_key.myapp_key.id
     AWS_SECRET_ACCESS_KEY = aws_iam_access_key.myapp_key.secret
   }
-
-  depends_on = [module.eks.cluster_id]
+  depends_on = [kubernetes_namespace.ns_project]
 }
