@@ -5,7 +5,7 @@ COUNT_MAX="$1"
 
 if [ -z "$COUNT_MAX" ]
 then
-   COUNT_MAX="11"
+   COUNT_MAX="1000"
 fi
 
 stress(){
@@ -13,7 +13,7 @@ while [ $COUNT -lt $COUNT_MAX ]
 do
   string1="$(echo $RANDOM | md5sum | head -c 10; echo;)"
   string2="$(echo $RANDOM | md5sum | head -c 10; echo;)"
-  id="$(echo $RANDOM)"
+  random_id="$(echo $RANDOM)"
   curl -s -k --location --request POST "http://$API_ADDRESS/create" \
   --header 'Content-Type: application/json' \
   --data-raw '{
@@ -21,6 +21,13 @@ do
       "firstName": '\"$string1\"',
       "lastName": '\"$string2\"'
   }' | jq .
+  curl -s -k --location --request POST "http://$API_ADDRESS/create" \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "id": '$random_id',
+      "firstName": '\"$string1\"',
+      "lastName": '\"$string2\"'
+  }' > /dev/null
   COUNT=`expr $COUNT + 1`
 done
 }
