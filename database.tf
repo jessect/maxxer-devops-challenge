@@ -166,7 +166,9 @@ resource "null_resource" "myapp_db_user" {
     GRANT ALL PRIVILEGES ON ${var.project}.* TO '${var.app_user}'@'%';"
     EOT
   }
+
   depends_on = [module.rds.db_instance_id]
+
 }
 
 # create db user grafana
@@ -183,7 +185,9 @@ resource "null_resource" "grafana_db_user" {
     GRANT ALL PRIVILEGES ON grafana.* TO 'grafana'@'%';"
     EOT
   }
+
   depends_on = [module.rds.db_instance_id]
+
 }
 
 # import dump file (database restore with some grafana dashboards)
@@ -191,5 +195,7 @@ resource "null_resource" "grafana_db_import" {
   provisioner "local-exec" {
     command = "kubectl apply -f grafana/mysql.yml && kubectl cp grafana/grafana.sql mysql:/tmp && kubectl cp grafana/db-import.sh mysql:/tmp && kubectl exec mysql -- /tmp/db-import.sh ${module.rds.db_instance_address} ${module.rds.db_instance_username} ${random_password.master_password.result} && kubectl delete -f grafana/mysql.yml"
   }
+
   depends_on = [null_resource.grafana_db_user]
+
 }

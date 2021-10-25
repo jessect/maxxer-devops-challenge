@@ -248,7 +248,9 @@ resource "aws_codepipeline" "pipeline" {
       }
     }
   }
+
   depends_on = [module.eks.cluster_id]
+
 }
 
 # push the source dir to codecommit repository
@@ -259,7 +261,7 @@ resource "null_resource" "codecommit_push" {
     git init
     git add .
     git commit -m 'Initial commit'
-    git push --set-upstream codecommit::us-east-1://${var.project}-${var.repo_name} ${var.repo_default_branch}
+    git push --set-upstream codecommit::${var.region}://${var.project}-${var.repo_name} ${var.repo_default_branch}
     rm .git -rf
     EOT
     working_dir = "./source"
