@@ -1,6 +1,6 @@
 # Infrastructure Provisioning with Terraform
 
-The objective of this project is to deploy with just one command a complete environment, including CI / CD pipeline and monitoring tools using infrastructure as code (IaC) .
+The objective of this project is to deploy with just one command a complete environment, including CI / CD pipeline and monitoring tools using infrastructure as code (IaC).
 
 AWS Services:
 
@@ -39,7 +39,7 @@ Default region name [None]: us-east-1
 Default output format [None]: json
 ``` 
 
-* Add account profiles to ~/.aws/credentials:
+* Set account profile
 
 ```
 $ aws configure set region us-east-1 --profile default
@@ -64,6 +64,13 @@ terraform apply
 terraform destroy
 ```
 
+## Deployment on Video
+
+See the screen recording of the whole deployment and teardown process of the environment.
+
+[![Screen recording](https://img.youtube.com/vi/M0o24cpwOLU/0.jpg)](https://youtu.be/M0o24cpwOLU)
+
+
 ## Tools
 
 There are some scripts in the tools directory to get environment information and stress test.
@@ -73,20 +80,20 @@ There are some scripts in the tools directory to get environment information and
 ```
 myapp version 1.0 
 
-3 running instances
+POD Details 
+ 
+myapp-5f59d9f8d7-2s94v	10.0.101.53	123456789.dkr.ecr.us-east-1.amazonaws.com/jaylabs-myapp-dev:dd42ae6f
+myapp-5f59d9f8d7-8l9dq	10.0.101.75	123456789.dkr.ecr.us-east-1.amazonaws.com/jaylabs-myapp-dev:dd42ae6f
+myapp-5f59d9f8d7-j2lk5	10.0.101.6	123456789.dkr.ecr.us-east-1.amazonaws.com/jaylabs-myapp-dev:dd42ae6f
 
-myApp access: 
+myApp Access: 
 
 http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com
 http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/health
 http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/metrics
-http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/create
 http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/get
-http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/get/{id}
-http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/update/{id}
-http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/delete/{id}
 
-Grafama access: 
+Grafama Access: 
 
 http://jaylabs-grafana-example.us-east-1.elb.amazonaws.com
 
@@ -101,14 +108,24 @@ jaylabs     myapp-65b9596bd4-6hgs9   1/1     Running   6          21m
 jaylabs     myapp-65b9596bd4-j7pjv   1/1     Running   0          13s
 
 Sun Oct 24 05:01:29 PM -03 2021
-
-
-
 ```
 
 * Get database information
 ```
 ./get-db-info.sh 
+
+select Id,User,Host,db,Command from information_schema.processlist;
+
+Id  User             Host                db       Command
+8   rdsadmin         localhost:46521     NULL     Sleep
+26  grafana          10.0.102.72:60756   grafana  Sleep
+27  grafana          10.0.102.72:60758   grafana  Sleep
+19  appuser          10.0.102.130:60188  jaylabs  Sleep
+20  appuser          10.0.102.29:47226   jaylabs  Sleep
+21  appuser          10.0.102.11:47882   jaylabs  Sleep
+5   event_scheduler  localhost           NULL     Daemon
+47  admin            10.0.102.148:35840  NULL     Query
+
 
 select count(*) from jaylabs.people 
 
@@ -141,7 +158,7 @@ id	first_name	last_name
 
 ## myApp
 
-It is a simple microservice in this deployment doing CRUD operation using Golang and MySql
+This deployment has a simple microservice that does CRUD operations using Golang and MySQL.
 
 API endpoints:
 
