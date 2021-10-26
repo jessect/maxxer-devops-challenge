@@ -93,7 +93,7 @@ http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/health
 http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/metrics
 http://jaylabs-myapp-example.us-east-1.elb.amazonaws.com/get
 
-Grafama Access: 
+Grafana Access: 
 
 http://jaylabs-grafana-example.us-east-1.elb.amazonaws.com
 
