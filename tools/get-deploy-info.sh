@@ -16,7 +16,7 @@ echo "http://$API_ADDRESS/health"
 echo "http://$API_ADDRESS/metrics"
 echo "http://$API_ADDRESS/get"
 
-echo -e "\nGrafama Access: \n"
+echo -e "\nGrafana Access: \n"
 echo "http://$GRAFANA_ADDRESS"
 echo -e "\nUser: admin"
 echo -e "Pass: R3sLtzASpQNk8TfRsTBvMxa25B58bCWjadyKK0Ko"
