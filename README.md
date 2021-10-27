@@ -4,15 +4,15 @@ The objective of this project is to deploy with just one command a complete envi
 
 AWS Services:
 
-* Amazon Virtual Private Cloud (VPC)
-* Amazon Elastic Kubernetes Service (EKS)
-* Amazon Elastic Container Registry (ECR)
-* Amazon Relational Database Service (RDS)
-* Amazon S3
-* AWS CodeCommit
-* AWS CodeBuild
-* AWS CodePipeline
-* AWS Secrets Manager
+* Virtual Private Cloud (VPC)
+* Elastic Kubernetes Service (EKS)
+* Elastic Container Registry (ECR)
+* Relational Database Service (RDS)
+* S3
+* CodeCommit
+* CodeBuild
+* CodePipeline
+* Secrets Manager
 
 
 ## Requirements
