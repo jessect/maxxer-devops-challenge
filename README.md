@@ -24,6 +24,20 @@ AWS Services:
 - [git](https://github.com/git-guides/install-git) 2.31.1
 - [git-remote-codecommit](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-git-remote-codecommit.html#setting-up-git-remote-codecommit-install) 1.25.10
 
+## Git
+
+Configure your Git username/email
+
+Set your username:
+```
+git config --global user.name "FIRST_NAME LAST_NAME"
+```
+
+Set your email address:
+```
+git config --global user.email "MY_NAME@example.com"
+```
+
 ## AWS Credentials
 
 Terraform requires that AWS CLI has administrative access for deployment
