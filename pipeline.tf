@@ -259,6 +259,7 @@ resource "null_resource" "codecommit_push" {
     command     = <<EOT
     pip install git-remote-codecommit
     git init
+    git checkout -b ${var.repo_default_branch}
     git add .
     git commit -m 'Initial commit'
     git push --set-upstream codecommit::${var.region}://${var.project}-${var.repo_name} ${var.repo_default_branch}
