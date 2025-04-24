@@ -1,4 +1,29 @@
-# Infrastructure Provisioning with Terraform
+# DevOps Challenge – Maxxer
+## Description
+You’d need to prepare a simple service which uses a storage dependency(Redis/MySQL/etc.)
+written in your language of choice, prepare a Dockerfile and a Helm chart for it and deploy it to a
+Kubernetes cluster provisioned by yourself.
+
+## Requirements
+* You can use any Kubernetes provider/deployment way you’d like
+* All the other Helm charts used in the deployment should be listed
+* The resulting deployment files must have the ability to be deployed in a few(ideally one)
+commands
+* All the development history should be recorded in Git
+* The resulting Git repository should have a README with enough information to do a full
+deployment from scratch
+Bonus points
+* Terraform files to provision a K8s cluster on the cloud
+* Ruby or Golang solution for bumping application version
+## Deliverables
+* Deployment platform Git repository tarball/zip with README included
+* [Optional] Screen recording of the whole deployment and teardown process
+
+[PDF](./Maxxer-DevOps-Position-Test.pdf)
+
+---
+
+## Infrastructure Provisioning with Terraform
 
 The objective of this project is to deploy with just one command a complete environment, including CI / CD pipeline and monitoring tools using infrastructure as code (IaC).
 
